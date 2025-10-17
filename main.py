@@ -1,9 +1,13 @@
 import os
-import newrelic.agent
+import logging
 
-# Initialize New Relic agent
+# Initialize New Relic agent if configured
 # This must be done before importing any modules to be monitored
-newrelic.agent.initialize('newrelic.ini', os.getenv('NEW_RELIC_ENVIRONMENT', 'development'))
+try:
+    import newrelic.agent
+    newrelic.agent.initialize('newrelic.ini', os.getenv('NEW_RELIC_ENVIRONMENT', 'development'))
+except Exception as e:
+    logging.warning(f"New Relic agent initialization failed: {e}. Application will run without monitoring.")
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
