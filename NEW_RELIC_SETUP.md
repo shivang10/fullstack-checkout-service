@@ -185,6 +185,7 @@ Create custom dashboards to track key metrics:
 // In your app.js, add custom events
 // Note: These tracking functions are already implemented in the app.js file.
 // Below are examples showing how they are structured:
+// These functions assume access to the global 'cart' array variable defined in app.js
 
 // Track product views
 function trackProductView(productId, productName, price) {
@@ -198,6 +199,7 @@ function trackProductView(productId, productName, price) {
 }
 
 // Track add to cart events
+// Note: This function accesses the global 'cart' variable to calculate metrics
 function trackAddToCart(productId, productName, quantity, price) {
     if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('AddToCart', {
@@ -205,19 +207,22 @@ function trackAddToCart(productId, productName, quantity, price) {
             productName: productName,
             quantity: quantity,
             price: price,
+            // Calculate total items across all cart entries
             totalCartItems: cart.reduce((sum, item) => sum + item.quantity, 0),
+            // Count number of unique products in cart
             uniqueProductsInCart: cart.length
         });
     }
 }
 
 // Track checkout started
+// itemCount and totalAmount are passed as parameters to avoid dependency on global state
 function trackCheckoutStarted(itemCount, totalAmount) {
     if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('CheckoutStarted', {
             itemCount: itemCount,
             totalAmount: totalAmount,
-            cartItems: cart.length
+            cartItems: cart.length  // Uses global cart variable
         });
     }
 }
