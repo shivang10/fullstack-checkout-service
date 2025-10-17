@@ -1,9 +1,13 @@
 # Initialize New Relic agent first, before any other imports
 import os
+
+# Initialize New Relic if configured
+NEW_RELIC_AVAILABLE = False
 if os.getenv('NEW_RELIC_LICENSE_KEY'):
     try:
         import newrelic.agent
         newrelic.agent.initialize('newrelic.ini', environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development'))
+        NEW_RELIC_AVAILABLE = True
     except Exception as e:
         print(f"Warning: Failed to initialize New Relic agent: {e}")
 
@@ -66,13 +70,13 @@ async def checkout(checkout_request: CheckoutRequest):
     """Process a checkout request and create an order"""
     
     # Add New Relic custom attributes for business context
-    try:
-        import newrelic.agent
-        newrelic.agent.add_custom_attribute('customer.email', checkout_request.customer_email)
-        newrelic.agent.add_custom_attribute('payment.method', checkout_request.payment_method)
-        newrelic.agent.add_custom_attribute('cart.item_count', len(checkout_request.items))
-    except Exception:
-        pass  # New Relic not initialized, continue without tracking
+    if NEW_RELIC_AVAILABLE:
+        try:
+            newrelic.agent.add_custom_attribute('customer.email', checkout_request.customer_email)
+            newrelic.agent.add_custom_attribute('payment.method', checkout_request.payment_method)
+            newrelic.agent.add_custom_attribute('cart.item_count', len(checkout_request.items))
+        except Exception:
+            pass  # Silently continue if New Relic tracking fails
     
     if not checkout_request.items:
         raise HTTPException(
@@ -132,13 +136,13 @@ async def checkout(checkout_request: CheckoutRequest):
     orders_db[order_id] = order
     
     # Add New Relic custom attributes for completed order
-    try:
-        import newrelic.agent
-        newrelic.agent.add_custom_attribute('order.id', order_id)
-        newrelic.agent.add_custom_attribute('order.total_amount', total_amount)
-        newrelic.agent.add_custom_attribute('order.status', order.status.value)
-    except Exception:
-        pass  # New Relic not initialized, continue without tracking
+    if NEW_RELIC_AVAILABLE:
+        try:
+            newrelic.agent.add_custom_attribute('order.id', order_id)
+            newrelic.agent.add_custom_attribute('order.total_amount', total_amount)
+            newrelic.agent.add_custom_attribute('order.status', order.status.value)
+        except Exception:
+            pass  # Silently continue if New Relic tracking fails
     
     return order
 

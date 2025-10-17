@@ -87,9 +87,12 @@ export NEW_RELIC_ENVIRONMENT="production"
 python main.py
 ```
 
-Or use a `.env` file with python-dotenv (already included):
+Or create a `.env` file in the project root:
 ```bash
-# The application will automatically load from .env file
+# Create .env file based on the example
+cp .env.example .env
+# Edit .env and add your New Relic credentials
+# Then start the application
 python main.py
 ```
 
