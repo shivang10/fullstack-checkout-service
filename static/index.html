@@ -4,6 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Service - Shop</title>
+    
+    <!-- New Relic Browser Monitoring Agent -->
+    <!-- 
+        To enable New Relic Browser Monitoring:
+        1. Log into New Relic One (https://one.newrelic.com/)
+        2. Navigate to Browser -> Add more
+        3. Select "Copy/Paste JavaScript code"
+        4. Name your app: "fullstack-checkout-service-browser"
+        5. Copy the JavaScript snippet provided by New Relic
+        6. Replace the placeholder script below with your actual New Relic Browser agent code
+        
+        The New Relic Browser agent should be placed here in the <head> section
+        before other scripts to ensure proper monitoring of page load performance.
+        
+        Example structure (replace with your actual snippet):
+        <script type="text/javascript">
+            window.NREUM||(NREUM={});
+            NREUM.init={...your configuration...};
+            NREUM.loader_config={...your loader config...};
+            NREUM.info={...your app info...};
+            // ... rest of the New Relic Browser agent code
+        </script>
+        
+        Optional: Add custom attributes after New Relic initialization:
+        <script type="text/javascript">
+            // Set custom attributes for enhanced monitoring
+            if (window.NREUM && NREUM.setCustomAttribute) {
+                NREUM.setCustomAttribute('environment', 'production');
+                NREUM.setCustomAttribute('appVersion', '1.0.0');
+            }
+        </script>
+    -->
+    <script type="text/javascript">
+        // New Relic Browser Agent Placeholder
+        // Replace this placeholder with your actual New Relic Browser agent snippet
+        // obtained from New Relic One (https://one.newrelic.com/)
+        window.NREUM||(NREUM={});
+        NREUM.info = {
+            // This is a placeholder - replace with your actual New Relic configuration
+            // when you create a Browser application in New Relic
+            beacon: "bam.nr-data.net",
+            errorBeacon: "bam.nr-data.net",
+            licenseKey: "YOUR_NEW_RELIC_LICENSE_KEY",
+            applicationID: "YOUR_APPLICATION_ID",
+            sa: 1
+        };
+        console.info('New Relic Browser Monitoring placeholder loaded. Please configure with your actual credentials.');
+    </script>
+    
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>

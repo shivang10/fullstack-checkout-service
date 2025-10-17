@@ -5,6 +5,51 @@ const API_URL = window.location.origin;
 let cart = [];
 let products = [];
 
+// New Relic Browser Monitoring - Custom Event Tracking
+// These functions track user interactions for enhanced monitoring
+// They will only execute if New Relic Browser agent is properly configured
+
+function trackNewRelicEvent(eventName, attributes) {
+    if (window.NREUM && typeof NREUM.addPageAction === 'function') {
+        NREUM.addPageAction(eventName, attributes);
+    }
+}
+
+function trackProductView(productId, productName, price) {
+    trackNewRelicEvent('ProductView', {
+        productId: productId,
+        productName: productName,
+        price: price
+    });
+}
+
+function trackAddToCart(productId, productName, quantity, price) {
+    trackNewRelicEvent('AddToCart', {
+        productId: productId,
+        productName: productName,
+        quantity: quantity,
+        price: price,
+        totalCartItems: cart.reduce((sum, item) => sum + item.quantity, 0),
+        uniqueProductsInCart: cart.length
+    });
+}
+
+function trackCheckoutStarted(itemCount, totalAmount) {
+    trackNewRelicEvent('CheckoutStarted', {
+        itemCount: itemCount,
+        totalAmount: totalAmount,
+        cartItems: cart.length
+    });
+}
+
+function trackOrderCompleted(orderId, totalAmount, itemCount) {
+    trackNewRelicEvent('OrderCompleted', {
+        orderId: orderId,
+        totalAmount: totalAmount,
+        itemCount: itemCount
+    });
+}
+
 // Initialize the app
 async function init() {
     await loadProducts();
@@ -17,9 +62,20 @@ async function loadProducts() {
         const response = await fetch(`${API_URL}/api/products`);
         products = await response.json();
         displayProducts(products);
+        
+        // Track page view with product catalog loaded
+        trackNewRelicEvent('ProductCatalogLoaded', {
+            productCount: products.length,
+            totalStock: products.reduce((sum, p) => sum + p.stock, 0)
+        });
     } catch (error) {
         console.error('Error loading products:', error);
         alert('Failed to load products. Please try again.');
+        
+        // Track error in New Relic
+        trackNewRelicEvent('ProductLoadError', {
+            errorMessage: error.message
+        });
     }
 }
 
@@ -70,6 +126,10 @@ function addToCart(productId) {
             quantity: 1
         });
     }
+    
+    // Track add to cart event in New Relic
+    const quantity = existingItem ? existingItem.quantity : 1;
+    trackAddToCart(product.id, product.name, quantity, product.price);
     
     updateCartUI();
     
@@ -161,6 +221,14 @@ function showCheckoutForm() {
         return;
     }
     
+    // Track checkout started event
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalAmount = cart.reduce((sum, item) => {
+        const product = products.find(p => p.id === item.product_id);
+        return sum + (product.price * item.quantity);
+    }, 0);
+    trackCheckoutStarted(totalItems, totalAmount);
+    
     document.getElementById('checkoutModal').classList.add('active');
     toggleCart(); // Close cart sidebar
 }
@@ -198,6 +266,10 @@ async function submitCheckout(event) {
         
         const order = await response.json();
         
+        // Track successful order in New Relic
+        const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+        trackOrderCompleted(order.order_id, order.total_amount, totalItems);
+        
         // Clear cart
         cart = [];
         updateCartUI();
@@ -214,6 +286,12 @@ async function submitCheckout(event) {
     } catch (error) {
         console.error('Checkout error:', error);
         alert(`Checkout failed: ${error.message}`);
+        
+        // Track checkout error in New Relic
+        trackNewRelicEvent('CheckoutError', {
+            errorMessage: error.message,
+            cartSize: cart.length
+        });
     }
 }
 

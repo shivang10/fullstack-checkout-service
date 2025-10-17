@@ -19,6 +19,15 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order confirmation display
 - Modern UI with gradient themes
 - Mobile-friendly design
+- **New Relic Browser Monitoring integration** - Ready for real user monitoring (RUM)
+
+### Monitoring
+- **New Relic Browser Monitoring**: Integrated and ready to use
+  - Real User Monitoring (RUM) for actual user experience metrics
+  - JavaScript error tracking with stack traces
+  - AJAX performance monitoring for API calls
+  - Custom event tracking for e-commerce actions (product views, add to cart, checkout, orders)
+  - See [NEW_RELIC_SETUP.md](NEW_RELIC_SETUP.md) for setup instructions
 
 ## Demo Products
 
@@ -102,6 +111,17 @@ The application will be available at:
 5. **Checkout**: Click "Proceed to Checkout" and fill in your details
 6. **Place Order**: Submit the form to complete your purchase
 7. **Order Confirmation**: View your order details and confirmation
+
+## Monitoring Setup
+
+This application includes New Relic Browser Monitoring integration for comprehensive frontend monitoring. To enable monitoring:
+
+1. Create a Browser application in New Relic One
+2. Copy your New Relic Browser agent snippet
+3. Replace the placeholder in `static/index.html` with your actual credentials
+4. Deploy and verify data flowing to New Relic
+
+For detailed setup instructions, see [NEW_RELIC_SETUP.md](NEW_RELIC_SETUP.md).
 
 ## Project Structure
 
