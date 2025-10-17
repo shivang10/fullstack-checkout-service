@@ -184,12 +184,14 @@ This application includes built-in support for New Relic APM (Application Perfor
 5. **View your data**: Visit the [New Relic dashboard](https://one.newrelic.com/) to see your application metrics
 
 ### Custom Metrics Tracked
-- `customer.email`: Customer email for transaction correlation
+- `customer.email_hash`: Hashed customer email for transaction correlation (privacy-preserving)
 - `payment.method`: Payment method used (credit_card, paypal, etc.)
 - `cart.item_count`: Number of items in the cart
-- `order.id`: Unique order identifier
+- `order.id_hash`: Hashed order identifier (privacy-preserving)
 - `order.total_amount`: Total order amount
 - `order.status`: Order status (pending, processing, completed, cancelled)
+
+**Note**: Sensitive data like customer emails and order IDs are hashed using SHA-256 before being sent to New Relic, preserving privacy while maintaining trackability.
 
 ### Configuration
 The New Relic agent configuration is stored in `newrelic.ini`. You can customize:
