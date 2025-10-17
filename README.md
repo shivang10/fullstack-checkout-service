@@ -145,6 +145,69 @@ Use the built-in Swagger UI documentation at http://localhost:8000/docs to test 
 - Update `models.py` to add new fields or validation rules
 - Customize the UI by editing files in the `static/` directory
 
+## CI/CD and Deployment Tracking
+
+This repository includes automated CI/CD using GitHub Actions with New Relic deployment tracking.
+
+### Workflow
+
+The `.github/workflows/deploy.yml` workflow automatically runs on every push to the `main` branch and:
+
+1. **Sets up the environment**: Installs Python 3.11 and project dependencies
+2. **Runs smoke tests**: Verifies the application starts correctly
+3. **Deploys the application**: Placeholder for your deployment commands
+4. **Records deployment**: Tracks deployment in New Relic APM for performance correlation
+
+### Required Secrets
+
+To enable New Relic deployment tracking, add the following secrets to your GitHub repository:
+
+1. **`NEW_RELIC_API_KEY`**: Your New Relic User API key
+   - Get it from: New Relic → Account Settings → API Keys
+   - Type: User API Key
+
+2. **`NEW_RELIC_ENTITY_GUID`**: Your APM application GUID
+   - Find it in: New Relic → APM → Your Application → See metadata
+   - Format: `<ACCOUNT_ID>|APM|APPLICATION|<APP_ID>`
+
+### Setting Up Secrets
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Add each secret with its corresponding value
+
+### Manual Workflow Trigger
+
+You can also trigger the workflow manually:
+
+1. Go to **Actions** tab in your repository
+2. Select **Deploy and Track** workflow
+3. Click **Run workflow**
+
+### Deployment Customization
+
+Update the "Deploy application" step in `.github/workflows/deploy.yml` with your actual deployment commands. Examples:
+
+- Deploy to cloud providers (AWS, GCP, Azure)
+- Push to container registries (Docker Hub, ECR, GCR)
+- Deploy to Kubernetes clusters
+- Deploy to serverless platforms (Lambda, Cloud Functions)
+
+### Benefits
+
+- ✅ **Automated Deployments**: Consistent, reliable deployments on every push
+- ✅ **Performance Correlation**: See how deployments affect your application's performance
+- ✅ **Quick Issue Detection**: Identify if a deployment caused performance issues
+- ✅ **Deployment History**: Track deployment frequency and success rate
+- ✅ **Team Visibility**: Entire team can see deployment status and history
+
+### Resources
+
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [New Relic Deployment Tracking](https://docs.newrelic.com/docs/apm/new-relic-apm/maintenance/record-monitor-deployments/)
+- [New Relic Deployment Marker Action](https://github.com/marketplace/actions/new-relic-deployment-marker)
+
 ## License
 
 This is a demo application for educational purposes.
