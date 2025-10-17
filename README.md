@@ -37,6 +37,7 @@ The application comes with 8 pre-loaded demo products:
 ### Prerequisites
 - Python 3.8 or higher
 - pip (Python package manager)
+- (Optional) New Relic account for monitoring
 
 ### Setup
 
@@ -49,6 +50,13 @@ cd fullstack-checkout-service
 2. Install dependencies:
 ```bash
 pip install -r requirements.txt
+```
+
+3. (Optional) Configure New Relic monitoring:
+```bash
+export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+export NEW_RELIC_APP_NAME="Fullstack Checkout Service"
+export NEW_RELIC_ENVIRONMENT="production"  # Optional: defaults to 'development'
 ```
 
 ## Running the Application
@@ -124,12 +132,45 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application Performance Monitoring (APM) and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
 - **CSS3**: Modern styling with flexbox and grid
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
+
+## New Relic Monitoring
+
+This application includes New Relic APM for monitoring and observability.
+
+### Features Enabled
+- **Application Performance Monitoring (APM)**: Track response times, throughput, and error rates
+- **Distributed Tracing**: See the path requests take through your system
+- **Error Tracking**: Automatic capture and reporting of exceptions
+- **Transaction Tracing**: Deep dive into slow transactions
+- **Real User Monitoring**: Browser monitoring with auto-instrumentation
+
+### Configuration
+
+The New Relic agent is configured via `newrelic.ini` and requires the following environment variables:
+
+- `NEW_RELIC_LICENSE_KEY` (required): Your New Relic license key
+- `NEW_RELIC_APP_NAME` (required): The name your app will appear as in New Relic
+- `NEW_RELIC_ENVIRONMENT` (optional): Environment name (development, staging, production). Defaults to 'development'
+
+### Running Without New Relic
+
+If you don't have a New Relic account or don't want to use monitoring, the application will still run. The agent initialization will be skipped if the license key is not provided, and a warning will be logged.
+
+### Getting Started with New Relic
+
+1. Sign up for a New Relic account at https://newrelic.com
+2. Obtain your license key from the account settings
+3. Set the environment variables as shown in the Setup section
+4. Run your application normally - data will appear in New Relic within a few minutes
+
+For more information, visit the [New Relic Python Agent documentation](https://docs.newrelic.com/docs/apm/agents/python-agent/).
 
 ## Development
 
