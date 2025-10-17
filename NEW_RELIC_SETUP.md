@@ -216,13 +216,14 @@ function trackAddToCart(productId, productName, quantity, price) {
 }
 
 // Track checkout started
-// Note: itemCount and totalAmount are passed as parameters, but cartItems still uses global cart variable
+// Note: itemCount (total quantity) and totalAmount are passed as parameters
+// cartItems (number of unique products) uses global cart variable
 function trackCheckoutStarted(itemCount, totalAmount) {
     if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('CheckoutStarted', {
-            itemCount: itemCount,
-            totalAmount: totalAmount,
-            cartItems: cart.length  // Uses global cart variable for number of cart items
+            itemCount: itemCount,          // Total quantity of all items
+            totalAmount: totalAmount,       // Total cart value
+            cartItems: cart.length          // Number of unique products in cart
         });
     }
 }
