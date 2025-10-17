@@ -37,6 +37,7 @@ The application comes with 8 pre-loaded demo products:
 ### Prerequisites
 - Python 3.8 or higher
 - pip (Python package manager)
+- (Optional) New Relic account for monitoring
 
 ### Setup
 
@@ -51,6 +52,15 @@ cd fullstack-checkout-service
 pip install -r requirements.txt
 ```
 
+3. (Optional) Configure New Relic monitoring:
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and add your New Relic license key
+# You can get your license key from: https://one.newrelic.com/launcher/api-keys-ui.api-keys-launcher
+```
+
 ## Running the Application
 
 Start the FastAPI server:
@@ -63,10 +73,31 @@ Or use uvicorn directly:
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
+### Running with New Relic Monitoring
+
+To enable New Relic monitoring, set the required environment variables:
+
+```bash
+# Set environment variables
+export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+export NEW_RELIC_ENVIRONMENT="production"
+
+# Start the application
+python main.py
+```
+
+Or use a `.env` file with python-dotenv (already included):
+```bash
+# The application will automatically load from .env file
+python main.py
+```
+
 The application will be available at:
 - **Frontend**: http://localhost:8000/shop
 - **API Documentation**: http://localhost:8000/docs
 - **Alternative API Docs**: http://localhost:8000/redoc
+- **New Relic Dashboard**: https://one.newrelic.com/ (if monitoring is enabled)
 
 ## API Endpoints
 
@@ -118,12 +149,62 @@ fullstack-checkout-service/
 └── README.md           # Documentation
 ```
 
+## New Relic Monitoring
+
+This application includes built-in support for New Relic APM (Application Performance Monitoring).
+
+### Features Monitored
+- **Performance Metrics**: Response times, throughput, and error rates
+- **Distributed Tracing**: End-to-end transaction tracking
+- **Custom Attributes**: Business metrics like order amounts, payment methods, cart size
+- **Error Tracking**: Automatic exception capture and reporting
+- **Transaction Traces**: Detailed performance breakdowns
+
+### Setup Instructions
+
+1. **Sign up for New Relic**: Visit [newrelic.com](https://newrelic.com/) to create a free account
+
+2. **Get your license key**: 
+   - Log in to New Relic
+   - Navigate to: Account settings → API keys
+   - Copy your license key
+
+3. **Configure environment variables**:
+   ```bash
+   export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+   export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+   export NEW_RELIC_ENVIRONMENT="production"
+   ```
+
+4. **Start your application**: The New Relic agent will automatically initialize and start reporting data
+
+5. **View your data**: Visit the [New Relic dashboard](https://one.newrelic.com/) to see your application metrics
+
+### Custom Metrics Tracked
+- `customer.email`: Customer email for transaction correlation
+- `payment.method`: Payment method used (credit_card, paypal, etc.)
+- `cart.item_count`: Number of items in the cart
+- `order.id`: Unique order identifier
+- `order.total_amount`: Total order amount
+- `order.status`: Order status (pending, processing, completed, cancelled)
+
+### Configuration
+The New Relic agent configuration is stored in `newrelic.ini`. You can customize:
+- Transaction thresholds
+- Error collection rules
+- SQL query obfuscation
+- Browser monitoring settings
+- And more...
+
+For detailed configuration options, see the [New Relic Python agent documentation](https://docs.newrelic.com/docs/apm/agents/python-agent/).
+
 ## Technologies Used
 
 ### Backend
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application performance monitoring and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
