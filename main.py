@@ -1,3 +1,10 @@
+import os
+import newrelic.agent
+
+# Initialize New Relic agent
+# This must be done before importing any modules to be monitored
+newrelic.agent.initialize('newrelic.ini', os.getenv('NEW_RELIC_ENVIRONMENT', 'development'))
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
