@@ -131,6 +131,10 @@ fullstack-checkout-service/
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
 
+### Monitoring
+- **New Relic Browser Monitoring**: Ready for Real User Monitoring (RUM) integration
+  - See [NEW_RELIC_SETUP.md](NEW_RELIC_SETUP.md) for setup instructions
+
 ## Development
 
 The application uses in-memory storage, so all data is reset when the server restarts. This is intentional for demo purposes.
