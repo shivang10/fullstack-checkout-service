@@ -27,6 +27,9 @@ Added `newrelic==11.0.1` dependency.
 ### 3. `main.py` (Modified)
 Added New Relic agent initialization at the top of the file with proper error handling:
 ```python
+import os
+import logging
+
 try:
     import newrelic.agent
     newrelic.agent.initialize('newrelic.ini', os.getenv('NEW_RELIC_ENVIRONMENT', 'development'))
