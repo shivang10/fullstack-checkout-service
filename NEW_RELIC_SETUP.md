@@ -183,36 +183,52 @@ Create custom dashboards to track key metrics:
 
 ```javascript
 // In your app.js, add custom events
-if (window.NREUM && NREUM.addPageAction) {
-    // Track product views
-    function trackProductView(productId, productName) {
+// Note: These tracking functions are already implemented in the app.js file.
+// Below are examples showing how they are structured:
+
+// Track product views
+function trackProductView(productId, productName, price) {
+    if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('ProductView', {
             productId: productId,
-            productName: productName
+            productName: productName,
+            price: price
         });
     }
-    
-    // Track add to cart events
-    function trackAddToCart(productId, quantity) {
+}
+
+// Track add to cart events
+function trackAddToCart(productId, productName, quantity, price) {
+    if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('AddToCart', {
             productId: productId,
-            quantity: quantity
+            productName: productName,
+            quantity: quantity,
+            price: price,
+            totalCartItems: cart.reduce((sum, item) => sum + item.quantity, 0),
+            uniqueProductsInCart: cart.length
         });
     }
-    
-    // Track checkout started
-    function trackCheckoutStarted(itemCount, totalAmount) {
+}
+
+// Track checkout started
+function trackCheckoutStarted(itemCount, totalAmount) {
+    if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('CheckoutStarted', {
             itemCount: itemCount,
-            totalAmount: totalAmount
+            totalAmount: totalAmount,
+            cartItems: cart.length
         });
     }
-    
-    // Track order completed
-    function trackOrderCompleted(orderId, totalAmount) {
+}
+
+// Track order completed
+function trackOrderCompleted(orderId, totalAmount, itemCount) {
+    if (window.NREUM && NREUM.addPageAction) {
         NREUM.addPageAction('OrderCompleted', {
             orderId: orderId,
-            totalAmount: totalAmount
+            totalAmount: totalAmount,
+            itemCount: itemCount
         });
     }
 }

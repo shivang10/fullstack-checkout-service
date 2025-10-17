@@ -29,7 +29,8 @@ function trackAddToCart(productId, productName, quantity, price) {
         productName: productName,
         quantity: quantity,
         price: price,
-        cartSize: cart.length
+        totalCartItems: cart.reduce((sum, item) => sum + item.quantity, 0),
+        uniqueProductsInCart: cart.length
     });
 }
 
@@ -37,7 +38,7 @@ function trackCheckoutStarted(itemCount, totalAmount) {
     trackNewRelicEvent('CheckoutStarted', {
         itemCount: itemCount,
         totalAmount: totalAmount,
-        uniqueProducts: cart.length
+        cartItems: cart.length
     });
 }
 
