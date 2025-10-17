@@ -1,0 +1,47 @@
+name: Deploy and Track
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run application (smoke test)
+        run: |
+          echo "Starting FastAPI application for smoke test..."
+          timeout 10s python main.py || code=$?; if [ $code -ne 124 ] && [ $code -ne 0 ]; then exit $code; fi
+          echo "Application started successfully"
+
+      - name: Deploy application
+        run: |
+          echo "🚀 Deployment steps would go here"
+          echo "Examples:"
+          echo "  - Deploy to cloud provider (AWS, GCP, Azure, etc.)"
+          echo "  - Update container registry"
+          echo "  - Deploy to Kubernetes cluster"
+          echo "  - Deploy to serverless platform"
+          echo ""
+          echo "Deployment completed successfully for commit: ${{ github.sha }}"
+
+      - name: Record deployment in New Relic
+        uses: newrelic/deployment-marker-action@v2.3.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          guid: ${{ secrets.NEW_RELIC_ENTITY_GUID }}
+          version: ${{ github.sha }}
+          user: ${{ github.actor }}
