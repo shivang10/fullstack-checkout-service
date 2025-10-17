@@ -74,7 +74,7 @@ async def checkout(checkout_request: CheckoutRequest):
     if NEW_RELIC_AVAILABLE:
         try:
             # Hash sensitive customer email for privacy while maintaining trackability
-            email_hash = hashlib.sha256(checkout_request.customer_email.encode()).hexdigest()[:16]
+            email_hash = hashlib.sha256(checkout_request.customer_email.encode()).hexdigest()[:32]
             newrelic.agent.add_custom_attribute('customer.email_hash', email_hash)
             newrelic.agent.add_custom_attribute('payment.method', checkout_request.payment_method)
             newrelic.agent.add_custom_attribute('cart.item_count', len(checkout_request.items))
@@ -142,7 +142,7 @@ async def checkout(checkout_request: CheckoutRequest):
     if NEW_RELIC_AVAILABLE:
         try:
             # Hash order ID for privacy while maintaining trackability
-            order_id_hash = hashlib.sha256(order_id.encode()).hexdigest()[:16]
+            order_id_hash = hashlib.sha256(order_id.encode()).hexdigest()[:32]
             newrelic.agent.add_custom_attribute('order.id_hash', order_id_hash)
             newrelic.agent.add_custom_attribute('order.total_amount', total_amount)
             newrelic.agent.add_custom_attribute('order.status', order.status.value)
