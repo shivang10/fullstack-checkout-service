@@ -26,7 +26,8 @@
         // NREUM.setCustomAttribute('version', '1.0.0');
         
         // Example: Track user information (add after user authentication)
-        // NREUM.setCustomAttribute('user_id', userId);
+        // IMPORTANT: For privacy compliance (GDPR, CCPA), use hashed/anonymized identifiers
+        // NREUM.setCustomAttribute('user_hash', hashedUserId); // Use SHA256 or similar
         // NREUM.setCustomAttribute('user_type', 'customer');
     </script>
     

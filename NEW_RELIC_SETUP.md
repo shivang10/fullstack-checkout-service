@@ -39,9 +39,16 @@ NREUM.setCustomAttribute('environment', 'production'); // or 'development', 'sta
 NREUM.setCustomAttribute('version', '1.0.0');
 
 // Track user information (add this in your authentication flow)
+// IMPORTANT: For privacy compliance (GDPR, CCPA), use hashed/anonymized identifiers
+// Do NOT send raw user IDs, emails, or other PII
 // Example: Add to app.js after user logs in
 if (currentUser) {
-    NREUM.setCustomAttribute('user_id', currentUser.id);
+    // Use a hash function (SHA-256) to anonymize the user ID
+    const userHash = await crypto.subtle.digest('SHA-256', 
+        new TextEncoder().encode(currentUser.id)).then(
+        h => Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join('')
+    );
+    NREUM.setCustomAttribute('user_hash', userHash);
     NREUM.setCustomAttribute('user_type', 'customer');
 }
 ```
@@ -115,10 +122,12 @@ async function submitCheckout(event) {
     // ... existing code ...
     
     if (typeof newrelic !== 'undefined') {
+        // Note: Avoid sending sensitive data like actual order IDs
+        // Use session-based tracking or hashed identifiers instead
         newrelic.addPageAction('checkoutCompleted', {
-            orderId: order.order_id,
             totalAmount: order.total_amount,
-            itemCount: order.items.length
+            itemCount: order.items.length,
+            paymentMethod: order.payment_method
         });
     }
 }
@@ -142,6 +151,30 @@ window.addEventListener('load', function() {
 ```
 
 ## Monitoring Best Practices
+
+### Data Privacy and Compliance
+
+**IMPORTANT**: When implementing browser monitoring, be mindful of data privacy regulations:
+
+1. **Never send PII (Personally Identifiable Information)**:
+   - ❌ Raw user IDs, emails, names, phone numbers
+   - ❌ Order IDs, transaction IDs, or other business-sensitive data
+   - ✅ Use hashed/anonymized identifiers (SHA-256 recommended)
+   - ✅ Use aggregate metrics (counts, totals) rather than specific identifiers
+
+2. **Privacy Regulations**:
+   - Comply with GDPR, CCPA, and other applicable privacy laws
+   - Update your privacy policy to mention browser monitoring
+   - Consider cookie consent requirements in your jurisdiction
+   - Review New Relic's data processing agreements
+
+3. **Data Minimization**:
+   - Only track what's necessary for monitoring and debugging
+   - Avoid capturing sensitive form data
+   - Configure New Relic to exclude sensitive URLs or parameters
+   - Regularly review and audit custom attributes
+
+### Alert Configuration
 
 1. **Set up Browser Alerts**: Create alerts for:
    - Page load time > 3 seconds
